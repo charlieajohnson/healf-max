@@ -22,6 +22,9 @@ Leave it to the model.
 86 lightweight markdown files, Andrej Karpathy-inspired graph retrieval. 
 Each of which address a key component of either Healf or a potential query, that the model can access quickly and reliably.
 
+# Context Assembly
+For each turn, I assemble the prompt around the smallest viable/useful context window. The model can match the prompt and keywords inside of it with the carefully selected information inside the knowledge base, and then formulate it's response accordingly - keeping it highly "aware" without the immediate requirement for web access.
+
 # Out Of Scope
 
 I chose not to include:
