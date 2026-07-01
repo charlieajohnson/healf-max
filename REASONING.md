@@ -49,8 +49,6 @@ To lean fully in the direction of "this feels like you are speaking to someone a
 
 # Future state
 
-Many (natural) directions a tool like this can, and will evolve.
+Many (natural) directions a tool like this can, and will evolve. Potentially a pool of capital waiting to be "accessed", in some sense. 
 
-"Claude, check on my Healf order."
-"Chat, can you reorder my Magnesium from Healf?"
-(+ a myriad of other revenue generating natural language queries that are waiting for us to build tooling around them)
+"Claude, can you reorder my last Healf order."
