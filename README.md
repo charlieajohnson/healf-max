@@ -19,7 +19,7 @@ Populate `.env` when you want live OpenAI-backed answers and embeddings:
 
 ```bash
 OPENAI_API_KEY=
-HEALF_MAX_MODEL=gpt-4.1-mini
+HEALF_MAX_MODEL=gpt-5.5-2026-04-23
 HEALF_MAX_EMBEDDING_MODEL=text-embedding-3-small
 HEALF_MAX_KB_DIR=kb
 HEALF_MAX_STORAGE_DIR=.storage
