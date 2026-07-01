@@ -1,0 +1,35 @@
+[project]
+name = "healf-max"
+version = "0.1.0"
+description = "Command-line wellbeing recommendation assistant for a D2C health and wellness brand."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=1.26",
+  "openai>=1.99.0",
+  "pydantic>=2.7",
+  "python-dotenv>=1.0",
+  "python-frontmatter>=1.1",
+  "pyyaml>=6.0",
+  "rich>=13.7",
+  "typer>=0.12",
+]
+
+[project.scripts]
+healf-max = "healf_max.cli:main"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.2",
+]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

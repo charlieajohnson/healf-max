@@ -1,0 +1,23 @@
+profile_id: demo_customer_hyrox_29f
+source: synthetic_oura_like
+window: trailing_14_days
+signals:
+  - signal: deep_sleep
+    value: 48
+    unit: minutes
+    status: low
+    window: trailing_14_days
+  - signal: resting_heart_rate
+    value: 61
+    unit: bpm
+    status: normal
+    window: trailing_14_days
+  - signal: hrv
+    value: 41
+    unit: ms
+    status: below_baseline
+    window: trailing_14_days
+  - signal: training_load
+    value: high
+    status: high
+    window: trailing_7_days

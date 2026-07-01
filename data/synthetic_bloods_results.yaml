@@ -1,0 +1,24 @@
+profile_id: demo_customer_hyrox_29f
+collected_at: "2026-06-24"
+summary: Synthetic bloods panel for demo use only.
+markers:
+  - marker: ferritin
+    value: 18
+    unit: ug/L
+    status: low
+    plain_language: Iron stores look low for someone training hard.
+  - marker: vitamin_b12
+    value: 312
+    unit: ng/L
+    status: suboptimal
+    plain_language: Borderline for a mostly plant-based diet.
+  - marker: vitamin_d
+    value: 71
+    unit: nmol/L
+    status: optimal
+    plain_language: Looks broadly adequate.
+  - marker: tsh
+    value: 2.1
+    unit: mIU/L
+    status: optimal
+    plain_language: No synthetic flag in this demo panel.

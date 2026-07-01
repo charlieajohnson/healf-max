@@ -1,0 +1,13 @@
+id: demo_customer_hyrox_29f
+age: 29
+sex: female
+diet: mostly_plant_based
+goals:
+  - complete_hyrox_in_12_weeks
+  - improve_sleep_quality
+  - improve_daily_energy
+constraints:
+  - caffeine_sensitive
+  - wants_low_chaos_stack
+supplement_appetite: moderate
+optimisation_style: balanced
