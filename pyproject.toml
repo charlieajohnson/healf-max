@@ -15,9 +15,6 @@ dependencies = [
   "typer>=0.12",
 ]
 
-[project.scripts]
-healf-max = "healf_max.cli:main"
-
 [dependency-groups]
 dev = [
   "pytest>=8.2",
@@ -28,8 +25,12 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["."]
+include = ["healf_max*"]
+
+[tool.setuptools]
+script-files = ["bin/healf-max"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = ["."]

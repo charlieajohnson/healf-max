@@ -1,35 +1,34 @@
 ---
-id: ferritin
+id: magnesium
 type: biomarker
-title: Ferritin
+title: Magnesium
 status: active
 pillar:
-- eat
+- sleep
+- mind
 - move
 tags:
-- iron_status
-- fatigue
-- training
+- magnesium
+- sleep
+- deep_sleep
 - recovery
-- hyrox
-marker_unit: ng_ml
+marker_unit: mmol_l
 demo_result:
-  value: 18
-  status: low
+  value: suboptimal
+  status: suboptimal
 interpretation_mode: plain_language
-action_mode: clinician_follow_up
+action_mode: wellness_plus_follow_up
 related_symptoms_or_goals:
-- fatigue
-- training_recovery
-- exercise_tolerance
+- low_deep_sleep
+- recovery_bottleneck
 evidence_routes:
-- ferritin_low_fatigue
+- magnesium_sleep_recovery
 - bloods_plain_language
 product_lanes:
+- magnesium_glycinate
 - bloods_testing
-- expert_advice
-escalation_mode: abnormal_bloods_need_follow_up
-retrieval_priority: 10
+escalation_mode: check_context
+retrieval_priority: 8
 safety_boundary:
 - abnormal_bloods_need_follow_up
 - no_diagnosis
@@ -42,7 +41,7 @@ reviewed_at: '2026-07-01'
 ---
 # Summary
 
-Ferritin reflects iron stores. Low ferritin can be relevant to tiredness and training tolerance, but it is not a simple supplement-shopping problem.
+Magnesium can be discussed around sleep routine and recovery, while keeping claims modest and checking relevant medication or kidney context.
 
 # Plain-language route
 

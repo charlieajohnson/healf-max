@@ -1,35 +1,31 @@
 ---
-id: ferritin
+id: omega_3_index
 type: biomarker
-title: Ferritin
+title: Omega-3 index
 status: active
 pillar:
 - eat
-- move
 tags:
-- iron_status
-- fatigue
-- training
-- recovery
-- hyrox
-marker_unit: ng_ml
+- omega_3
+- fatty_acids
+- general_health
+marker_unit: percent
 demo_result:
-  value: 18
-  status: low
+  value: 4.2
+  status: suboptimal
 interpretation_mode: plain_language
-action_mode: clinician_follow_up
+action_mode: food_first_or_category_comparison
 related_symptoms_or_goals:
-- fatigue
-- training_recovery
-- exercise_tolerance
+- low_oily_fish_intake
+- general_health
 evidence_routes:
-- ferritin_low_fatigue
+- omega_3_general_health
 - bloods_plain_language
 product_lanes:
+- omega_3
 - bloods_testing
-- expert_advice
-escalation_mode: abnormal_bloods_need_follow_up
-retrieval_priority: 10
+escalation_mode: contextual
+retrieval_priority: 6
 safety_boundary:
 - abnormal_bloods_need_follow_up
 - no_diagnosis
@@ -42,7 +38,7 @@ reviewed_at: '2026-07-01'
 ---
 # Summary
 
-Ferritin reflects iron stores. Low ferritin can be relevant to tiredness and training tolerance, but it is not a simple supplement-shopping problem.
+Omega-3 index can guide a food-first or category comparison conversation, especially when oily fish intake is low.
 
 # Plain-language route
 

@@ -1,6 +1,18 @@
 from typer.testing import CliRunner
 
+from healf_max.config import load_settings
 from healf_max.cli import app
+
+
+def test_settings_resolve_repo_local_kb_dir(monkeypatch) -> None:
+    monkeypatch.setenv("HEALF_MAX_DISABLE_DOTENV", "1")
+    monkeypatch.delenv("HEALF_MAX_KB_DIR", raising=False)
+
+    settings = load_settings()
+
+    assert settings.kb_dir.name == "kb"
+    assert (settings.project_root / "pyproject.toml").exists()
+    assert settings.kb_dir.parent == settings.project_root
 
 
 def test_cli_imports_and_help_renders() -> None:

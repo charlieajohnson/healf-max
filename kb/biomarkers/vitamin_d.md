@@ -1,35 +1,35 @@
 ---
-id: ferritin
+id: vitamin_d
 type: biomarker
-title: Ferritin
+title: Vitamin D
 status: active
 pillar:
 - eat
 - move
 tags:
-- iron_status
-- fatigue
-- training
-- recovery
-- hyrox
-marker_unit: ng_ml
+- vitamin_d
+- general_health
+- musculoskeletal
+- bloods
+marker_unit: nmol_l
 demo_result:
-  value: 18
+  value: 42
   status: low
 interpretation_mode: plain_language
-action_mode: clinician_follow_up
+action_mode: practitioner_guided
 related_symptoms_or_goals:
-- fatigue
-- training_recovery
-- exercise_tolerance
+- low_mood_winter
+- bone_muscle_support
+- general_health
 evidence_routes:
-- ferritin_low_fatigue
+- vitamin_d_low_status
 - bloods_plain_language
 product_lanes:
+- vitamin_d_contextual
 - bloods_testing
 - expert_advice
-escalation_mode: abnormal_bloods_need_follow_up
-retrieval_priority: 10
+escalation_mode: practitioner_guided
+retrieval_priority: 8
 safety_boundary:
 - abnormal_bloods_need_follow_up
 - no_diagnosis
@@ -42,7 +42,7 @@ reviewed_at: '2026-07-01'
 ---
 # Summary
 
-Ferritin reflects iron stores. Low ferritin can be relevant to tiredness and training tolerance, but it is not a simple supplement-shopping problem.
+Vitamin D status gives useful context for general health and musculoskeletal support. Low results should be handled with guided follow-up.
 
 # Plain-language route
 

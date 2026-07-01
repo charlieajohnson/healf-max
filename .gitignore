@@ -10,4 +10,5 @@ __pycache__/
 .storage/*
 !.storage/.gitkeep
 dist/
+build/
 *.egg-info/

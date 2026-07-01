@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import sys
+
+
+def main() -> int:
+    cwd = Path.cwd()
+    if (cwd / "healf_max").is_dir():
+        sys.path.insert(0, str(cwd))
+
+    from healf_max.cli import main as cli_main
+
+    cli_main()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

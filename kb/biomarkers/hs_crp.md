@@ -1,35 +1,34 @@
 ---
-id: ferritin
+id: hs_crp
 type: biomarker
-title: Ferritin
+title: hs-CRP
 status: active
 pillar:
-- eat
+- mind
 - move
 tags:
-- iron_status
-- fatigue
-- training
+- hs_crp
+- inflammation_marker
 - recovery
-- hyrox
-marker_unit: ng_ml
+- stress
+marker_unit: mg_l
 demo_result:
-  value: 18
-  status: low
+  value: 1.8
+  status: unknown
 interpretation_mode: plain_language
-action_mode: clinician_follow_up
+action_mode: contextual_follow_up
 related_symptoms_or_goals:
-- fatigue
-- training_recovery
-- exercise_tolerance
+- recovery_pressure
+- stress_load
+- general_health
 evidence_routes:
-- ferritin_low_fatigue
 - bloods_plain_language
+- recovery_basics
 product_lanes:
 - bloods_testing
 - expert_advice
-escalation_mode: abnormal_bloods_need_follow_up
-retrieval_priority: 10
+escalation_mode: follow_up_if_high
+retrieval_priority: 6
 safety_boundary:
 - abnormal_bloods_need_follow_up
 - no_diagnosis
@@ -42,7 +41,7 @@ reviewed_at: '2026-07-01'
 ---
 # Summary
 
-Ferritin reflects iron stores. Low ferritin can be relevant to tiredness and training tolerance, but it is not a simple supplement-shopping problem.
+hs-CRP is a broad inflammation marker. It needs context and should not be used alone to infer a condition.
 
 # Plain-language route
 
