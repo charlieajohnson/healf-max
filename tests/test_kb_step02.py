@@ -90,3 +90,36 @@ def test_step02_brand_source_paths_are_portable() -> None:
     assert len(brand_records) == 5
     assert all(str(record.frontmatter["source_path"]).startswith("supplied/brand/") for record in brand_records)
     assert all(not str(record.frontmatter["source_path"]).startswith("/") for record in brand_records)
+
+
+def test_net_new_endurance_plant_based_knowledge_is_typed() -> None:
+    records = {record.id: record for record in load_kb_records(KB_DIR)}
+
+    assert records["endurance_fatigue_plant_based"].type == "wellbeing_moment"
+    assert records["oura_wearables"].type == "wearable_signal"
+    assert records["hyrox_recovery_guide"].type == "editorial_signal"
+    assert records["iron_support"].type == "product_category"
+    assert records["b12_contextual"].type == "product_category"
+    assert "plant_based" in records["b12"].frontmatter["population_risk"]
+    assert records["ferritin"].frontmatter["bands"]["low"].startswith("<15")
+    assert "wearable_signal" in validate_kb(KB_DIR).counts_by_type
+
+
+def test_net_new_endurance_plant_based_search_path(tmp_path, monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    build_index(kb_dir=KB_DIR, storage_dir=tmp_path)
+
+    results = search_kb(
+        "plant based endurance athlete tired caffeine sensitive low deep sleep low ferritin borderline B12",
+        kb_dir=KB_DIR,
+        storage_dir=tmp_path,
+        limit=24,
+    )
+    paths = [record.path for record in results]
+
+    assert paths[0] == "moments/endurance_fatigue_plant_based.md"
+    assert "signals/oura_wearables.md" in paths
+    assert "editorial/hyrox_recovery_guide.md" in paths
+    assert "products/iron_support.md" in paths
+    assert "products/b12_contextual.md" in paths
+    assert "biomarkers/b12.md" in paths

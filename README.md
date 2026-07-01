@@ -52,6 +52,7 @@ Healf-Max is a wellbeing decision layer. It combines:
 - typed markdown KB records
 - evidence claims
 - biomarker routing
+- wearable trend routing
 - product category fit
 - Healf editorial, trust, tone and brand signals
 
@@ -75,6 +76,7 @@ kb/
   _schemas/
   evidence/
   biomarkers/
+  signals/
   products/
   editorial/
   trust/
@@ -106,11 +108,12 @@ The current corpus includes:
 
 - 10 evidence records
 - 6 biomarker records
-- 8 product category records
-- 7 editorial records
+- 1 wearable signal record
+- 10 product category records
+- 8 editorial records
 - 5 trust records
 - 6 tone records
-- 5 wellbeing moments
+- 6 wellbeing moments
 - 4 example records
 - 5 supplied Healf brand records
 - schema docs for the record types
@@ -147,8 +150,8 @@ Search ranking combines:
 - body keyword match
 - optional embedding similarity
 - `retrieval_priority`
-- linked records from matched moments, biomarkers and evidence
-- type-balanced trace records for editorial, trust, tone and brand context
+- linked records from matched moments, biomarkers, evidence and wearable signals
+- type-balanced trace records for wearable, editorial, trust, tone and brand context
 
 Search output is grouped by record type and shows why each record was retrieved.
 
@@ -188,6 +191,12 @@ Public references used for direction:
 - [rag-agent](https://github.com/kevwan/rag-agent)
 - [Hugging Face RAG evaluation cookbook](https://huggingface.co/learn/cookbook/en/rag_evaluation)
 - [SafeRAG](https://github.com/IAAR-Shanghai/SafeRAG)
+- [NIH ODS Iron](https://ods.od.nih.gov/factsheets/Iron-HealthProfessional/)
+- [NIH ODS Magnesium](https://ods.od.nih.gov/factsheets/Magnesium-HealthProfessional/)
+- [NHS Vitamin B12 diagnosis](https://www.nhs.uk/conditions/vitamin-b12-or-folate-deficiency-anaemia/diagnosis/)
+- [NHS Vitamin D](https://www.nhs.uk/conditions/vitamins-and-minerals/vitamin-d/)
+- [Oura Readiness Score](https://ouraring.com/blog/readiness-score/)
+- [HYROX race format](https://hyrox.com/the-fitness-race/)
 
 ## Development
 

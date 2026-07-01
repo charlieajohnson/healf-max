@@ -13,6 +13,7 @@ TYPE_TO_GROUP = {
     "trust_signal": "trust",
     "tone_pattern": "tone",
     "wellbeing_moment": "moments",
+    "wearable_signal": "signals",
     "example": "examples",
     "brand_signal": "brand",
     "reference": "reference",

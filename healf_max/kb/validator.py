@@ -18,8 +18,16 @@ BANNED_BODY_PHRASES = (
 )
 
 REQUIRED_FIELDS = ("id", "type", "title", "status", "retrieval_priority", "reviewed_at")
-HEALTH_TYPES = {"evidence_claim", "biomarker", "product_category", "wellbeing_moment"}
-LINK_FIELDS = ("evidence_routes", "product_lanes", "editorial_signals", "tone_patterns", "trust_signals")
+HEALTH_TYPES = {"evidence_claim", "biomarker", "product_category", "wellbeing_moment", "wearable_signal"}
+LINK_FIELDS = (
+    "biomarker_routes",
+    "evidence_routes",
+    "wearable_signals",
+    "product_lanes",
+    "editorial_signals",
+    "tone_patterns",
+    "trust_signals",
+)
 
 
 def validate_kb(kb_dir: str | Path, *, strict: bool = False) -> KBValidationResult:

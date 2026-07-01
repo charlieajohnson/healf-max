@@ -113,10 +113,18 @@ def offline_turn(
         "pregnancy_or_child",
         "diagnosis_or_prescription_request",
     }:
-        answer = (
-            "Start with the boundary, not the basket. This needs practitioner or pharmacist review before supplement choices. "
-            "The useful next move is to clarify the flagged marker, medication context, pregnancy or diagnosis question, then decide what belongs in a routine."
-        )
+        if _looks_like_plant_based_endurance_biomarker_context(text):
+            answer = (
+                "Start with the boundary, not the basket. For a plant-based Hyrox or endurance block with tiredness, low deep sleep, low ferritin and borderline B12, "
+                "the first read is ferritin and B12 plus recovery pressure, not a missing stimulant. This is not a bigger-stack moment. "
+                "Get the flagged markers reviewed, especially before iron. Keep the useful lanes narrow: bloods or practitioner follow-up, B12 context because of the diet, "
+                "protein and electrolytes for training consistency, and magnesium only as a modest sleep-support lane if it fits your context."
+            )
+        else:
+            answer = (
+                "Start with the boundary, not the basket. This needs practitioner or pharmacist review before supplement choices. "
+                "The useful next move is to clarify the flagged marker, medication context, pregnancy or diagnosis question, then decide what belongs in a routine."
+            )
     elif "hyrox" in text or "deep sleep" in text or "tired" in text or "energy" in text:
         answer = (
             "Your body is sending a pretty clear group chat: training load, low deep sleep and tired most days. "
@@ -131,6 +139,13 @@ def offline_turn(
     if debug:
         answer += "\n\nDebug context\n" + context
     return prefix + answer
+
+
+def _looks_like_plant_based_endurance_biomarker_context(text: str) -> bool:
+    diet = "plant based" in text or "plant-based" in text or "vegan" in text or "vegetarian" in text
+    training = "hyrox" in text or "endurance" in text or "race" in text
+    markers = "ferritin" in text and ("b12" in text or "b 12" in text)
+    return diet and training and markers
 
 
 def _complete_with_tools(

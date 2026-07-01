@@ -32,3 +32,24 @@ def test_ask_degrades_without_openai_key(monkeypatch) -> None:
     assert result.exit_code == 0
     assert "OpenAI API key not configured" in result.output
     assert "not a bigger-stack moment" in result.output
+
+
+def test_ask_offline_handles_plant_based_biomarker_scenario(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setenv("HEALF_MAX_DISABLE_DOTENV", "1")
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "ask",
+            (
+                "I'm plant based and training for Hyrox. I'm tired, caffeine sensitive, "
+                "my Oura deep sleep is low, and my bloods show low ferritin and borderline B12."
+            ),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "plant-based" in result.output
+    assert "ferritin and B12" in result.output
+    assert "not a bigger-stack moment" in result.output

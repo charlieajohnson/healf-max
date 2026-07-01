@@ -12,16 +12,25 @@ TYPE_ORDER = {
     "wellbeing_moment": 0,
     "biomarker": 1,
     "evidence_claim": 2,
-    "product_category": 3,
-    "editorial_signal": 4,
-    "trust_signal": 5,
-    "tone_pattern": 6,
-    "brand_signal": 7,
-    "example": 8,
+    "wearable_signal": 3,
+    "product_category": 4,
+    "editorial_signal": 5,
+    "trust_signal": 6,
+    "tone_pattern": 7,
+    "brand_signal": 8,
+    "example": 9,
 }
 
-LINK_FIELDS = ("evidence_routes", "product_lanes", "editorial_signals", "tone_patterns", "trust_signals")
-TRACE_REQUIRED_TYPES = ("editorial_signal", "trust_signal", "tone_pattern", "brand_signal")
+LINK_FIELDS = (
+    "biomarker_routes",
+    "evidence_routes",
+    "wearable_signals",
+    "product_lanes",
+    "editorial_signals",
+    "tone_patterns",
+    "trust_signals",
+)
+TRACE_REQUIRED_TYPES = ("wearable_signal", "editorial_signal", "trust_signal", "tone_pattern", "brand_signal")
 TRACE_BALANCE_LIMIT = 16
 
 
@@ -82,11 +91,13 @@ def score_records(
     # Expand linked records from high-signal matches so a matched moment can pull
     # its evidence, product, editorial, trust and tone routes into the debug trace.
     direct_scores = dict(base_scores)
-    for source_id, (source_score, _) in direct_scores.items():
+    for source_id, (source_score, source_reasons) in direct_scores.items():
         source = id_to_record[source_id]
-        if source.type not in {"wellbeing_moment", "biomarker", "evidence_claim"}:
+        if source.type not in {"wellbeing_moment", "biomarker", "evidence_claim", "wearable_signal"}:
             continue
         if source_score < 18:
+            continue
+        if "specificity:missing" in source_reasons:
             continue
         for linked_id in _linked_ids(source.frontmatter):
             linked = id_to_record.get(linked_id)
@@ -154,11 +165,21 @@ def _score_record(query_terms: set[str], record: KBRecord) -> tuple[float, list[
     if body_match:
         score += 1.0 * len(body_match)
         reasons.append("body:" + ",".join(sorted(body_match)))
+    specificity_terms = _tokenise(" ".join(_as_strings(record.frontmatter.get("required_query_terms"))))
+    if score and specificity_terms:
+        specificity_match = query_terms.intersection(specificity_terms)
+        if specificity_match:
+            score += 6.0 * len(specificity_match)
+            reasons.append("specificity:" + ",".join(sorted(specificity_match)))
+        else:
+            score *= 0.30
+            reasons.append("specificity:missing")
     if score:
         type_boost = {
             "wellbeing_moment": 14.0,
             "biomarker": 18.0,
             "evidence_claim": 2.5,
+            "wearable_signal": 1.5,
         }.get(record.type, 0.0)
         if type_boost:
             score += type_boost
@@ -177,6 +198,14 @@ def _frontmatter_text(frontmatter: dict[str, Any]) -> str:
         "trigger_signals",
         "primary_interpretation",
         "related_symptoms_or_goals",
+        "routes_to_goals",
+        "signals",
+        "routing",
+        "wearable_correlates",
+        "population_risk",
+        "ingredient_lanes",
+        "bands",
+        "aliases",
         "fit_when",
         "use_when",
         "category_role",
@@ -193,6 +222,16 @@ def _frontmatter_text(frontmatter: dict[str, Any]) -> str:
         else:
             parts.append(str(value))
     return " ".join(parts)
+
+
+def _as_strings(value: Any) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return [str(item) for item in value]
+    if isinstance(value, dict):
+        return [str(item) for item in value.values()]
+    return [str(value)]
 
 
 def _linked_ids(frontmatter: dict[str, Any]) -> list[str]:

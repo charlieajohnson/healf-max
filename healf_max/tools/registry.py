@@ -134,6 +134,7 @@ def build_context_bundle(
         "customer_context": get_customer_context(),
         "retrieved_moments": [record.model_dump() for record in knowledge if record.kind == "moments"],
         "retrieved_biomarkers": [record.model_dump() for record in knowledge if record.kind == "biomarkers"],
+        "retrieved_wearable_signals": [record.model_dump() for record in knowledge if record.kind == "signals"],
         "retrieved_evidence": [record.model_dump() for record in knowledge if record.kind == "evidence"],
         "retrieved_products": [record.model_dump() for record in products],
         "retrieved_editorial_trust_tone": [
@@ -165,6 +166,7 @@ def _format_debug_bundle(bundle: dict[str, Any]) -> str:
     for label, key in [
         ("retrieved moments", "retrieved_moments"),
         ("retrieved biomarkers", "retrieved_biomarkers"),
+        ("retrieved wearable signals", "retrieved_wearable_signals"),
         ("retrieved evidence", "retrieved_evidence"),
         ("retrieved products", "retrieved_products"),
         ("retrieved editorial/trust/tone signals", "retrieved_editorial_trust_tone"),

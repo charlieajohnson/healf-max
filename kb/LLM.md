@@ -23,6 +23,7 @@ The assistant must help customers make clearer wellbeing decisions. It must not 
 |---|---|---|
 | `evidence/` | Ingredient science and wellness claims | Grounded reasoning |
 | `biomarkers/` | Marker interpretation and action routing | Bloods-led personalisation |
+| `signals/` | Wearable and behavioural trend records | Recovery and attention routing |
 | `products/` | Product/category records | Recommendation candidates |
 | `editorial/` | Healf-style social/editorial signals | Tone and customer fit |
 | `trust/` | Service/review-derived trust insights | Confidence and restraint |
@@ -49,11 +50,12 @@ Retrieve in this order:
 
 1. `moments/` for known wellbeing patterns.
 2. `biomarkers/` for blood result interpretation.
-3. `evidence/` for grounded claims.
-4. `products/` for product/category fit.
-5. `editorial/`, `trust/`, `tone/`, and `brand/` for answer shaping.
+3. `signals/` for wearable trend interpretation.
+4. `evidence/` for grounded claims.
+5. `products/` for product/category fit.
+6. `editorial/`, `trust/`, `tone/`, and `brand/` for answer shaping.
 
-Biomarkers and safety boundaries override product recommendations.
+Biomarkers, wearable guardrails and safety boundaries override product recommendations.
 
 ## Safety Rules
 
@@ -63,6 +65,7 @@ Biomarkers and safety boundaries override product recommendations.
 - Products may support wellness goals, but must not be framed as treating deficiencies, diseases, symptoms, or disorders.
 - If retrieval is weak, answer at category level only.
 - Do not turn abnormal blood results into a shopping list.
+- Do not treat Oura or other wearable stages as diagnoses.
 - Do not cite editorial, brand, or influencer signals as medical evidence.
 
 ## Tone Rules

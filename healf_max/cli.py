@@ -134,6 +134,7 @@ def _ordered_types(records: list[object]) -> list[str]:
         "wellbeing_moment",
         "biomarker",
         "evidence_claim",
+        "wearable_signal",
         "product_category",
         "editorial_signal",
         "trust_signal",
