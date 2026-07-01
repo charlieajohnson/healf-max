@@ -45,4 +45,4 @@ It was more important to me that the tool served as a reasonably intelligent lay
 What good is "advanced tooling" if it isn't aware of things a customer would be aware of?
 
 # One uncertain decision
-To lean fully in the direction of "this feels like you are speaking to someone at Healf" vs. having a rich medical research corpus with graceful degradation if a query touches a sensitive topic. To me, the brand has a sort of emotional/personal connection with the customers, and replacing this with a robotic chatbot who cannot hold the "feeling of the brand" felt like an expensive tradeoff. But again - uncertain, would leave this up to leadership to decide.
+To lean fully in the direction of "this feels like you are speaking to someone at Healf" vs. having a rich medical research corpus with graceful degradation if a query touches a sensitive topic. To me, the brand has a sort of emotional/personal connection with the customers, and replacing this with a robotic chatbot who cannot hold the "feeling of the brand" felt like an expensive tradeoff. But again, uncertain, would leave this up to leadership to decide.
