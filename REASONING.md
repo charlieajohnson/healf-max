@@ -10,10 +10,10 @@ The 4.8 star Trustpilot rating reaffirms this.
 When communicating with the brand (agentically), they are not seeking some grand revelation, they are seeking consistency and reliability.
 
 I focused the knowledge base on Healf's public presence exactly for this reason.
-Website scape, IG scape, Facebook scape, Trustpilot scape, all fed into one "agent managed" knowledge base.
+Website scrape, IG scrape, Facebook scrape, Trustpilot scrape, all fed into one "agent managed" knowledge base.
 
 My work with knowledge bases has told me this. 
-Don't over think it.
+Don't overthink it.
 
 It's for the model.
 Leave it to the model. 
@@ -37,7 +37,6 @@ Many cool directions we could take this.
 
 "Claude, check on my Healf order."
 "Chat, can you reorder my Magnesium from Healf?"
-+ a myraid of other revenue generating natural language queries that are just waiting for us to build tooling around them. :)
++ a myriad of other revenue generating natural language queries that are just waiting for us to build tooling around them. :)
 
 - Charlie
-charlie@charlieajohnson.com
