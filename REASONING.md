@@ -25,12 +25,12 @@ Each of which address a key component of either Healf or a potential query, that
 # Context assembly
 For each turn, I assemble the prompt around the smallest viable/useful context window. The model can match the prompt and keywords inside of it with the carefully selected information inside the knowledge base, and then formulate its response accordingly - keeping it highly "aware" without the immediate requirement for web access.
 
-Knowledge is structured by type (biomarker/wearable), and then retrieved as the model is formulating the response.
+Knowledge is structured by type, including biomarkers, wearable signals, product categories, and trust/tone records, then exposed through retrieval rather than pasted wholesale into every prompt.
 
 # Safety model
 Simple, yet firm safety boundary: wellness and product guidance is allowed, but you are not a doctor.
 Risky cases, given access to biomarkers, can calmly be elevated to appropriate medical resources.
-Naturally, not everything will be caught, especially in a prototype, but with a firm enough boundary and enough data - this can be refined, and the "failure rate" can be reduced significantly. 
+Naturally, not everything will be caught, especially in a prototype, but with a firm enough boundary and enough data. This can be refined, and the "failure rate" can be reduced significantly. 
 
 # What I left out
 
@@ -45,10 +45,4 @@ It was more important to me that the tool served as a reasonably intelligent lay
 What good is "advanced tooling" if it isn't aware of things a customer would be aware of?
 
 # One uncertain decision
-To lean fully in the direction of "this feels like you are speaking to someone at Healf" vs. having a rich medical research corpus with graceful     degradation if a query touches a sensitive topic. To me, the brand has a sort of emotional/personal connection with the customers, and replacing this with a robotic chatbot who cannot hold the "feeling of the brand" felt like an expensive tradeoff. But again - uncertain, would leave this up to leadership to decide.
-
-# Future state
-
-Many (natural) directions a tool like this can, and will evolve. Potentially a pool of capital waiting to be "accessed", in some sense. 
-
-"Claude, can you reorder my last Healf order."
+To lean fully in the direction of "this feels like you are speaking to someone at Healf" vs. having a rich medical research corpus with graceful degradation if a query touches a sensitive topic. To me, the brand has a sort of emotional/personal connection with the customers, and replacing this with a robotic chatbot who cannot hold the "feeling of the brand" felt like an expensive tradeoff. But again - uncertain, would leave this up to leadership to decide.
