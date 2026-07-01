@@ -15,6 +15,11 @@ commercial_mode: category_first
 example_products:
 - Bare Biology Omega-3
 - Nordic Naturals Omega-3
+catalogue_products:
+- bare_biology_life_soul_high_strength_omega_3
+- nordic_naturals_ultimate_omega
+- momentous_omega_3
+- pure_encapsulations_one_omega
 fit_when:
 - low_oily_fish_intake
 - omega_3_index_suboptimal

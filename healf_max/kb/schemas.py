@@ -9,6 +9,7 @@ TYPE_TO_GROUP = {
     "evidence_claim": "evidence",
     "biomarker": "biomarkers",
     "product_category": "products",
+    "product": "products",
     "editorial_signal": "editorial",
     "trust_signal": "trust",
     "tone_pattern": "tone",

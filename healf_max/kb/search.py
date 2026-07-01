@@ -16,11 +16,12 @@ TYPE_ORDER = {
     "evidence_claim": 2,
     "wearable_signal": 3,
     "product_category": 4,
-    "editorial_signal": 5,
-    "trust_signal": 6,
-    "tone_pattern": 7,
-    "brand_signal": 8,
-    "example": 9,
+    "product": 5,
+    "editorial_signal": 6,
+    "trust_signal": 7,
+    "tone_pattern": 8,
+    "brand_signal": 9,
+    "example": 10,
 }
 
 TRACE_REQUIRED_TYPES = ("wearable_signal", "editorial_signal", "trust_signal", "tone_pattern", "brand_signal")
@@ -94,7 +95,7 @@ def score_records(
     direct_scores = dict(base_scores)
     for source_id, (source_score, source_reasons) in direct_scores.items():
         source = id_to_record[source_id]
-        if source.type not in {"wellbeing_moment", "biomarker", "evidence_claim", "wearable_signal"}:
+        if source.type not in {"wellbeing_moment", "biomarker", "evidence_claim", "wearable_signal", "product_category"}:
             continue
         if source_score < 18:
             continue
@@ -221,6 +222,7 @@ def _score_record(query_terms: set[str], record: KBRecord) -> tuple[float, list[
             "biomarker": 18.0,
             "evidence_claim": 2.5,
             "wearable_signal": 1.5,
+            "product": 2.0,
         }.get(record.type, 0.0)
         if type_boost:
             score += type_boost
@@ -247,7 +249,16 @@ def _frontmatter_text(frontmatter: dict[str, Any]) -> str:
         "ingredient_lanes",
         "bands",
         "aliases",
+        "benefit_areas",
+        "brand",
+        "catalogue_products",
+        "catalogue_snapshot",
+        "category_routes",
         "fit_when",
+        "ingredient",
+        "name",
+        "paired_product_categories",
+        "pairs_with",
         "use_when",
         "category_role",
         "marker_unit",

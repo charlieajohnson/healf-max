@@ -28,7 +28,7 @@ This corpus follows the Karpathy LLM Wiki pattern in spirit: raw inputs are comp
 | `evidence/` | Ingredient science and wellness claims | Grounded reasoning |
 | `biomarkers/` | Marker interpretation and action routing | Bloods-led personalisation |
 | `signals/` | Wearable and behavioural trend records | Recovery and attention routing |
-| `products/` | Product/category records | Recommendation candidates |
+| `products/` | Product category records and dated product snapshots | Recommendation candidates |
 | `editorial/` | Healf-style social/editorial signals | Tone and customer fit |
 | `trust/` | Service/review-derived trust insights | Confidence and restraint |
 | `tone/` | Reusable voice patterns | Response style |
@@ -63,6 +63,8 @@ Retrieve in this order:
 Biomarkers, wearable guardrails and safety boundaries override product recommendations.
 
 Retrieval should be hybrid: fielded lexical matching, BM25, optional embedding similarity, graph-hop expansion, and type-balanced trace records. Graph-hop records should shape the answer only according to their type; editorial, tone, trust and brand records never become evidence.
+
+Product records are dated catalogue snapshots. Price, stock, delivery, review counts and handles can support commerce tooling later, but they are not live truth and must not be stated as current unless a live commerce source is queried.
 
 ## Safety Rules
 

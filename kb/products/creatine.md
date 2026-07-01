@@ -16,6 +16,11 @@ commercial_mode: category_first
 example_products:
 - Momentous Creatine
 - Thorne Creatine
+- Thorne Creatine - Travel Packs (NSF)
+catalogue_products:
+- thorne_creatine
+- momentous_creatine
+- thorne_creatine_travel_packs_nsf
 fit_when:
 - hyrox_training
 - strength_goal

@@ -14,8 +14,9 @@ tags:
 category_role: nutrition_support
 commercial_mode: category_first
 example_products:
-- Form Protein
-- Momentous Protein
+- Momentous Grass Fed Whey Protein Isolate
+catalogue_products:
+- momentous_grass_fed_whey_protein_isolate
 fit_when:
 - unclear_protein_intake
 - plant_based_training

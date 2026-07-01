@@ -18,6 +18,9 @@ commercial_mode: category_first
 example_products:
 - Thorne Magnesium Glycinate
 - Pure Encapsulations Magnesium Glycinate
+catalogue_products:
+- pure_encapsulations_magnesium_glycinate
+- thorne_magnesium_glycinate
 fit_when:
 - low_deep_sleep
 - suboptimal_magnesium

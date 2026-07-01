@@ -15,8 +15,9 @@ tags:
 category_role: hydration_support
 commercial_mode: category_first
 example_products:
-- LMNT
-- Cymbiotika Electrolytes
+- LMNT Recharge Electrolytes
+catalogue_products:
+- lmnt_recharge_electrolytes
 fit_when:
 - hard_training
 - sweat_losses

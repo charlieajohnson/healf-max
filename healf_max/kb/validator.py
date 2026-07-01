@@ -18,7 +18,8 @@ BANNED_BODY_PHRASES = (
 )
 
 REQUIRED_FIELDS = ("id", "type", "title", "status", "retrieval_priority", "reviewed_at")
-HEALTH_TYPES = {"evidence_claim", "biomarker", "product_category", "wellbeing_moment", "wearable_signal"}
+HEALTH_TYPES = {"evidence_claim", "biomarker", "product_category", "product", "wellbeing_moment", "wearable_signal"}
+PRODUCT_REQUIRED_FIELDS = ("brand", "name", "catalogue_snapshot", "source_path", "category_routes", "product_url")
 
 
 def validate_kb(kb_dir: str | Path, *, strict: bool = False) -> KBValidationResult:
@@ -58,6 +59,10 @@ def validate_kb(kb_dir: str | Path, *, strict: bool = False) -> KBValidationResu
             for field in ("safety_boundary", "prohibited_claims"):
                 if not record.frontmatter.get(field):
                     errors.append(f"{path.relative_to(root)}: health record missing '{field}'")
+        if record.type == "product":
+            for field in PRODUCT_REQUIRED_FIELDS:
+                if not record.frontmatter.get(field):
+                    errors.append(f"{path.relative_to(root)}: product record missing '{field}'")
         body_lower = record.body.lower()
         for phrase in BANNED_BODY_PHRASES:
             if phrase in body_lower:

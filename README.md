@@ -54,6 +54,7 @@ Healf-Max is a wellbeing decision layer. It combines:
 - biomarker routing
 - wearable trend routing
 - product category fit
+- dated product catalogue snapshots
 - Healf editorial, trust, tone and brand signals
 
 The answer shape is deliberately narrow:
@@ -80,6 +81,7 @@ kb/
   biomarkers/
   signals/
   products/
+    catalogue/
   editorial/
   trust/
   tone/
@@ -111,7 +113,8 @@ The current corpus includes:
 - 10 evidence records
 - 6 biomarker records
 - 1 wearable signal record
-- 10 product category records
+- 15 product category records
+- 20 dated product records from the supplied Healf Best Sellers snapshot
 - 8 editorial records
 - 5 trust records
 - 6 tone records
@@ -131,6 +134,15 @@ The `kb/brand/` records convert the supplied Healf source files into retrievable
 - `brand.topics`
 
 These records shape voice, personalisation and commercial framing. They do not establish medical evidence or live stock, price or delivery truth.
+
+## Product Catalogue
+
+The `kb/products/` layer now has two levels:
+
+- `product_category` records define durable lanes such as creatine, electrolytes, magnesium, omega-3, longevity support and gut health support.
+- `product` records under `kb/products/catalogue/` are dated Healf Best Sellers snapshots pulled from the supplied 2026-06-30 source files.
+
+Product records link back to category records through `category_routes`; categories link forward through `catalogue_products`. This keeps concrete product retrieval useful without letting price, stock, review count or delivery metadata become live truth.
 
 ## Retrieval
 
@@ -155,7 +167,7 @@ Search ranking combines:
 - body keyword match
 - optional embedding similarity
 - `retrieval_priority`
-- graph-hop expansion from matched moments, biomarkers, evidence and wearable signals
+- graph-hop expansion from matched moments, biomarkers, evidence, wearable signals and product categories
 - type-balanced trace records for wearable, editorial, trust, tone and brand context
 
 Search output is grouped by record type and shows why each record was retrieved.
