@@ -8,6 +8,30 @@ Command-line wellbeing recommendation assistant for a D2C UK health and wellness
 
 Healf-Max helps customers turn body data, goals, lifestyle context and curated product knowledge into the next useful wellbeing decision. It is evidence-aware, brand-native and commercially useful, but it is not a diagnosis tool and not a supplement shopping-list generator.
 
+## Cold Start
+
+Use this path if you are reviewing the repo from scratch:
+
+```bash
+git clone https://github.com/charlieajohnson/healf-max.git
+cd healf-max
+
+# Install uv if needed.
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+uv sync
+uv run healf-max bloods-demo
+uv run healf-max bloods-demo --debug
+uv run healf-max bloods-demo --json
+uv run pytest
+```
+
+Requirements:
+
+- Python `>=3.11`
+- `uv`
+- no OpenAI API key required for the flagship Bloods demo
+
 ## Setup
 
 ```bash
