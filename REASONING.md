@@ -18,8 +18,8 @@ Don't overthink it.
 It's for the model.
 Leave it to the model. 
 
-# Knowledge Base
-86 lightweight markdown files.
+# Knowledge Structure
+86 lightweight markdown files, Andrej Karpathy-inspired graph retrieval. 
 Each of which address a key component of either Healf or a potential query, that the model can access quickly and reliably.
 
 # Out Of Scope
