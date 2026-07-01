@@ -25,6 +25,11 @@ Each of which address a key component of either Healf or a potential query, that
 # Context Assembly
 For each turn, I assemble the prompt around the smallest viable/useful context window. The model can match the prompt and keywords inside of it with the carefully selected information inside the knowledge base, and then formulate it's response accordingly - keeping it highly "aware" without the immediate requirement for web access.
 
+# Safety model
+Simple, yet firm safety boundary: wellness and product guidance is allowed, but you are not a doctor.
+Risky cases, given access to biomarkers, can calmly be elevated to appropriate medical resources.
+Naturally, not everything will be caught, especially in a prototype, but with a firm enough boundary and enough data - this can be refined, and the "failure rate" can be reduced significantly. 
+
 # Out Of Scope
 
 I chose not to include:
