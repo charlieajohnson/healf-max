@@ -17,6 +17,10 @@ The assistant combines:
 
 The assistant must help customers make clearer wellbeing decisions. It must not diagnose, prescribe, or imply products treat medical conditions.
 
+## Knowledge Pattern
+
+This corpus follows the Karpathy LLM Wiki pattern in spirit: raw inputs are compiled into small durable Markdown records that an agent can inspect, diff and improve. Healf-Max extends that with typed YAML frontmatter, safety boundaries, explicit record links and hybrid retrieval.
+
 ## Directory Map
 
 | Directory | Purpose | Used For |
@@ -43,6 +47,7 @@ The assistant must help customers make clearer wellbeing decisions. It must not 
 6. Embed `title`, `summary`, `tags`, and `body`.
 7. Do not ingest records marked `status: draft` unless explicitly requested.
 8. Chunk only if body exceeds 600 tokens.
+9. Write frontmatter links into `.storage/kb_graph.json`.
 
 ## Retrieval Order
 
@@ -56,6 +61,8 @@ Retrieve in this order:
 6. `editorial/`, `trust/`, `tone/`, and `brand/` for answer shaping.
 
 Biomarkers, wearable guardrails and safety boundaries override product recommendations.
+
+Retrieval should be hybrid: fielded lexical matching, BM25, optional embedding similarity, graph-hop expansion, and type-balanced trace records. Graph-hop records should shape the answer only according to their type; editorial, tone, trust and brand records never become evidence.
 
 ## Safety Rules
 

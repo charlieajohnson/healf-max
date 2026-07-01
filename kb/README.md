@@ -2,6 +2,8 @@
 
 Markdown-first records with typed YAML frontmatter. The corpus is deliberately split into small, traceable records so retrieval can combine evidence, biomarkers, product lanes, brand voice and safety boundaries without collapsing them into one blob.
 
+The structure borrows from Andrej Karpathy's LLM Wiki idea: sources are compiled into durable Markdown knowledge records, then improved in Git over time. Healf-Max adds typed record schemas, safety fields and an explicit graph of frontmatter links so retrieval can follow known relationships rather than relying only on semantic similarity.
+
 ## Structure
 
 - `_schemas/` - record-shape examples and validation notes
@@ -20,7 +22,7 @@ Markdown-first records with typed YAML frontmatter. The corpus is deliberately s
 
 Every active record needs `id`, `type`, `title`, `status`, `retrieval_priority`, and `reviewed_at`. Health-related records also need `safety_boundary` and `prohibited_claims`.
 
-Wellbeing moments may link to `biomarker_routes`, `evidence_routes`, `wearable_signals`, `product_lanes`, `editorial_signals`, `tone_patterns`, and `trust_signals`. Search keeps evidence-led ranking first, then preserves visible trace space for wearable, brand, editorial, trust and tone context on larger result sets.
+Wellbeing moments may link to `biomarker_routes`, `evidence_routes`, `wearable_signals`, `product_lanes`, `editorial_signals`, `tone_patterns`, and `trust_signals`. Ingestion writes those links into `.storage/kb_graph.json`. Search combines fielded matching, BM25, optional embeddings and graph-hop expansion, then preserves visible trace space for wearable, brand, editorial, trust and tone context on larger result sets.
 
 Run:
 

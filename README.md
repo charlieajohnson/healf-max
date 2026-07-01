@@ -69,6 +69,8 @@ The answer shape is deliberately narrow:
 
 The KB is markdown-first and split into small, traceable records with typed YAML frontmatter.
 
+The design is inspired by Andrej Karpathy's [LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) pattern: compile raw source material once into durable, agent-readable Markdown pages rather than re-deriving meaning from loose chunks on every question. Healf-Max adapts that idea for a D2C wellness assistant by adding typed frontmatter, safety boundaries, linked records and a local hybrid retrieval layer.
+
 ```text
 kb/
   LLM.md
@@ -137,6 +139,7 @@ Ingestion writes an inspectable local index:
 ```text
 .storage/kb_index.jsonl
 .storage/kb_manifest.json
+.storage/kb_graph.json
 .storage/kb_embeddings.npy
 ```
 
@@ -144,13 +147,15 @@ If an API key is present, ingestion attempts embeddings with `HEALF_MAX_EMBEDDIN
 
 Search ranking combines:
 
+- fielded Markdown/frontmatter matches
+- BM25 over each compiled record
 - tag match
 - title and ID match
 - semantic frontmatter fields
 - body keyword match
 - optional embedding similarity
 - `retrieval_priority`
-- linked records from matched moments, biomarkers, evidence and wearable signals
+- graph-hop expansion from matched moments, biomarkers, evidence and wearable signals
 - type-balanced trace records for wearable, editorial, trust, tone and brand context
 
 Search output is grouped by record type and shows why each record was retrieved.
@@ -179,16 +184,19 @@ Healf-Max uses a small explicit orchestration layer:
 - Pydantic for typed domain models
 - deterministic safety checks before the model
 - OpenAI Responses API function tools for optional context retrieval
-- local JSONL/Numpy storage for the KB index
+- local JSONL/Numpy/JSON graph storage for the KB index
 
 Public references used for direction:
 
+- [Andrej Karpathy's LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)
 - [OpenAI Responses function calling](https://developers.openai.com/api/docs/guides/function-calling)
 - [OpenAI Responses streaming](https://developers.openai.com/api/docs/guides/streaming-responses)
 - [Typer](https://github.com/fastapi/typer)
 - [Rich](https://github.com/Textualize/rich)
 - [knowledge-rag](https://github.com/lyonzin/knowledge-rag)
 - [rag-agent](https://github.com/kevwan/rag-agent)
+- [Kwipu local Markdown Graph RAG](https://github.com/benmaster82/Kwipu)
+- [GraphRAG Hybrid](https://github.com/rileylemm/graphrag-hybrid)
 - [Hugging Face RAG evaluation cookbook](https://huggingface.co/learn/cookbook/en/rag_evaluation)
 - [SafeRAG](https://github.com/IAAR-Shanghai/SafeRAG)
 - [NIH ODS Iron](https://ods.od.nih.gov/factsheets/Iron-HealthProfessional/)

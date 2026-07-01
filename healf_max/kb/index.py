@@ -8,9 +8,9 @@ import numpy as np
 from openai import OpenAI
 
 from healf_max.config import load_settings
+from healf_max.kb.graph import GRAPH_FILE, build_record_graph
 from healf_max.kb.loader import load_kb_records
 from healf_max.kb.schemas import KBRecord
-from healf_max.kb.search import tokenise_for_index
 from healf_max.kb.validator import validate_kb
 
 INDEX_FILE = "kb_index.jsonl"
@@ -34,6 +34,8 @@ def build_index(*, kb_dir: str | Path, storage_dir: str | Path) -> int:
     with (storage / INDEX_FILE).open("w", encoding="utf-8") as handle:
         for record in records:
             handle.write(record.model_dump_json() + "\n")
+    graph = build_record_graph(records)
+    (storage / GRAPH_FILE).write_text(json.dumps(graph, indent=2, sort_keys=True), encoding="utf-8")
 
     embedding_status = "not_requested"
     embedding_model = os.getenv("HEALF_MAX_EMBEDDING_MODEL", "text-embedding-3-small")
@@ -59,6 +61,8 @@ def build_index(*, kb_dir: str | Path, storage_dir: str | Path) -> int:
         "embedding_status": embedding_status,
         "embedding_model": embedding_model,
         "index_file": INDEX_FILE,
+        "graph_file": GRAPH_FILE,
+        "graph_edge_count": graph["stats"]["edge_count"],
         "embeddings_file": EMBEDDINGS_FILE if embedding_status == "created" else None,
         "content_hashes": {record.id: record.content_hash for record in records},
     }

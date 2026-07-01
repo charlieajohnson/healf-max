@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import re
 from collections import Counter
+from math import log
 from pathlib import Path
 from typing import Any
 
+from healf_max.kb.graph import LINK_FIELDS, linked_ids
 from healf_max.kb.loader import load_kb_records
 from healf_max.kb.schemas import KBRecord
 
@@ -21,17 +23,10 @@ TYPE_ORDER = {
     "example": 9,
 }
 
-LINK_FIELDS = (
-    "biomarker_routes",
-    "evidence_routes",
-    "wearable_signals",
-    "product_lanes",
-    "editorial_signals",
-    "tone_patterns",
-    "trust_signals",
-)
 TRACE_REQUIRED_TYPES = ("wearable_signal", "editorial_signal", "trust_signal", "tone_pattern", "brand_signal")
 TRACE_BALANCE_LIMIT = 16
+BM25_K1 = 1.2
+BM25_B = 0.75
 
 
 def lexical_search(
@@ -74,6 +69,7 @@ def score_records(
         return []
 
     embedding_scores = embedding_scores or {}
+    bm25_scores = _bm25_scores(query_terms, records)
     base_scores: dict[str, tuple[float, list[str]]] = {}
     id_to_record = {record.id: record for record in records}
 
@@ -81,6 +77,11 @@ def score_records(
         if kinds and record.kind not in kinds and record.type not in kinds:
             continue
         score, reasons = _score_record(query_terms, record)
+        bm25_score = bm25_scores.get(record.id, 0.0)
+        if bm25_score:
+            bm25_weight = 0.3 if "specificity:missing" in reasons else 3.0
+            score += bm25_score * bm25_weight
+            reasons.append(f"bm25:{bm25_score:.2f}")
         embedding_score = embedding_scores.get(record.id, 0.0)
         if embedding_score:
             score += embedding_score * 5
@@ -99,7 +100,7 @@ def score_records(
             continue
         if "specificity:missing" in source_reasons:
             continue
-        for linked_id in _linked_ids(source.frontmatter):
+        for field, linked_id in _linked_ids_by_field(source.frontmatter):
             linked = id_to_record.get(linked_id)
             if linked is None:
                 continue
@@ -109,7 +110,7 @@ def score_records(
             boost = min(3.0, source_score * 0.15)
             base_scores[linked_id] = (
                 linked_score + boost,
-                reasons + [f"linked_from:{source.id}"],
+                reasons + [f"graph_hop:{field}:{source.id}"],
             )
 
     scored: list[KBRecord] = []
@@ -139,6 +140,46 @@ def _tokenise(text: str) -> set[str]:
 
 def tokenise_for_index(text: str) -> list[str]:
     return sorted(_tokenise(text))
+
+
+def _bm25_scores(query_terms: set[str], records: list[KBRecord]) -> dict[str, float]:
+    if not records:
+        return {}
+    document_terms = {record.id: _tokenise_list(record.searchable_text()) for record in records}
+    document_frequency: Counter[str] = Counter()
+    for terms in document_terms.values():
+        document_frequency.update(set(terms))
+    document_lengths = {record_id: len(terms) for record_id, terms in document_terms.items()}
+    average_length = sum(document_lengths.values()) / max(len(document_lengths), 1)
+    scores: dict[str, float] = {}
+    total_documents = len(records)
+
+    for record in records:
+        terms = document_terms[record.id]
+        if not terms:
+            continue
+        term_counts = Counter(terms)
+        score = 0.0
+        doc_length = document_lengths[record.id]
+        for term in query_terms:
+            frequency = term_counts.get(term, 0)
+            if not frequency:
+                continue
+            df = document_frequency[term]
+            idf = log(1 + (total_documents - df + 0.5) / (df + 0.5))
+            denominator = frequency + BM25_K1 * (1 - BM25_B + BM25_B * doc_length / average_length)
+            score += idf * (frequency * (BM25_K1 + 1) / denominator)
+        if score:
+            scores[record.id] = score
+    return scores
+
+
+def _tokenise_list(text: str) -> list[str]:
+    return [
+        token
+        for token in re.findall(r"[a-zA-Z0-9]+", text.lower())
+        if len(token) > 2 and token not in {"and", "the", "for", "with", "that", "this"}
+    ]
 
 
 def _score_record(query_terms: set[str], record: KBRecord) -> tuple[float, list[str]]:
@@ -234,14 +275,10 @@ def _as_strings(value: Any) -> list[str]:
     return [str(value)]
 
 
-def _linked_ids(frontmatter: dict[str, Any]) -> list[str]:
-    linked: list[str] = []
+def _linked_ids_by_field(frontmatter: dict[str, Any]) -> list[tuple[str, str]]:
+    linked: list[tuple[str, str]] = []
     for field in LINK_FIELDS:
-        value = frontmatter.get(field)
-        if isinstance(value, list):
-            linked.extend(str(item) for item in value)
-        elif value:
-            linked.append(str(value))
+        linked.extend((field, linked_id) for linked_id in linked_ids(frontmatter.get(field)))
     return linked
 
 

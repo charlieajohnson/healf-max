@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
 from pydantic import ValidationError
 
+from healf_max.kb.graph import LINK_FIELDS, linked_ids
 from healf_max.kb.loader import iter_markdown_files
 from healf_max.kb.parser import parse_markdown_file
 from healf_max.kb.schemas import KBValidationResult
@@ -19,15 +19,6 @@ BANNED_BODY_PHRASES = (
 
 REQUIRED_FIELDS = ("id", "type", "title", "status", "retrieval_priority", "reviewed_at")
 HEALTH_TYPES = {"evidence_claim", "biomarker", "product_category", "wellbeing_moment", "wearable_signal"}
-LINK_FIELDS = (
-    "biomarker_routes",
-    "evidence_routes",
-    "wearable_signals",
-    "product_lanes",
-    "editorial_signals",
-    "tone_patterns",
-    "trust_signals",
-)
 
 
 def validate_kb(kb_dir: str | Path, *, strict: bool = False) -> KBValidationResult:
@@ -75,7 +66,7 @@ def validate_kb(kb_dir: str | Path, *, strict: bool = False) -> KBValidationResu
     ids = {record.id for record in records}
     for record in records:
         for field in LINK_FIELDS:
-            for linked_id in _as_list(record.frontmatter.get(field)):
+            for linked_id in linked_ids(record.frontmatter.get(field)):
                 if linked_id not in ids:
                     warnings.append(f"{record.path}: linked id '{linked_id}' in '{field}' not found")
 
@@ -89,11 +80,3 @@ def validate_kb(kb_dir: str | Path, *, strict: bool = False) -> KBValidationResu
         warnings=warnings,
         errors=errors,
     )
-
-
-def _as_list(value: Any) -> list[str]:
-    if value is None:
-        return []
-    if isinstance(value, list):
-        return [str(item) for item in value]
-    return [str(value)]
