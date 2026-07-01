@@ -55,6 +55,9 @@ class RecommendationLane(BaseModel):
     product_categories: list[str] = Field(default_factory=list)
     safety_notes: list[str] = Field(default_factory=list)
     do_not_claim: list[str] = Field(default_factory=list)
+    evidence_supported: bool = True
+    retrieved_support: list[str] = Field(default_factory=list)
+    support_note: str = ""
 
 
 class TurnPlan(BaseModel):

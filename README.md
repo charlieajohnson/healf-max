@@ -23,6 +23,7 @@ uv sync
 uv run healf-max bloods-demo
 uv run healf-max bloods-demo --debug
 uv run healf-max bloods-demo --json
+uv run healf-max evals safety
 uv run pytest
 ```
 
@@ -69,6 +70,9 @@ uv run healf-max bloods-demo
 uv run healf-max bloods-demo --debug
 uv run healf-max bloods-demo --json
 uv run healf-max bloods-demo --profile data/synthetic_bloods_results.yaml
+uv run healf-max evals safety
+uv run healf-max evals safety --json
+uv run healf-max evals safety --report-dir evals/safety
 
 uv run healf-max ask "I need more energy"
 uv run healf-max ask --debug "I'm training for Hyrox in 12 weeks..."
@@ -240,6 +244,45 @@ It does not:
 
 Urgent symptoms, medication interactions, pregnancy or child-related contexts, and diagnosis requests stop product recommendations and route to appropriate human review.
 
+## Retrieval Lane Provenance
+
+Recommendation lanes now carry explicit support metadata:
+
+```json
+{
+  "id": "magnesium_glycinate",
+  "evidence_supported": true,
+  "retrieved_support": ["magnesium_glycinate", "magnesium_sleep_recovery"],
+  "support_note": "retrieved support: magnesium_glycinate, magnesium_sleep_recovery"
+}
+```
+
+The Bloods flagship demo uses those fields in both JSON and debug output. Lanes are annotated by intersecting declared `evidence_routes` and `product_categories` with retrieved KB records. This keeps the authored priority order stable while making unsupported defaults visible, for example the lower-priority omega-3 lane when the current trace does not retrieve its declared route.
+
+The demo trace intentionally combines genuine search results with a curated superset for explainability. The fast path reads from `.storage/kb_index.jsonl`; Markdown parsing is only used as a fallback when the index has not been built.
+
+## Safety Evals
+
+Stage 4 adds a deterministic offline safety harness:
+
+```bash
+uv run healf-max evals safety
+uv run healf-max evals safety --json
+uv run healf-max evals safety --report-dir evals/safety
+```
+
+The labelled dataset lives in `evals/safety/cases.yaml`. Thresholds live in `evals/safety/thresholds.yaml`. Generated `report.json` and `report.md` are ignored by Git so reviewers can run local reports without dirtying the repo.
+
+Current verified result:
+
+- 57 labelled cases
+- macro-F1 `0.951`
+- zero critical false negatives
+- critical recall floors met for urgent symptoms, medication interactions, pregnancy or child contexts, diagnosis or prescription requests, and biomarker follow-up
+- three conservative over-blocks retained as visible hard negatives
+
+This mirrors frontier RAG evaluation practice: keep retrieval/provenance checks separate from generation quality, then gate safety-critical failure modes with deterministic tests before any live model call.
+
 ## Architecture
 
 Healf-Max uses a small explicit orchestration layer:
@@ -248,8 +291,10 @@ Healf-Max uses a small explicit orchestration layer:
 - Rich for terminal rendering
 - Pydantic for typed domain models
 - deterministic safety checks before the model
+- deterministic safety evals with inspectable JSON/Markdown reports
 - OpenAI Responses API function tools for optional context retrieval
 - local JSONL/Numpy/JSON graph storage for the KB index
+- retrieval-lane provenance on Bloods recommendation output
 
 Public references used for direction:
 
@@ -264,6 +309,10 @@ Public references used for direction:
 - [GraphRAG Hybrid](https://github.com/rileylemm/graphrag-hybrid)
 - [Hugging Face RAG evaluation cookbook](https://huggingface.co/learn/cookbook/en/rag_evaluation)
 - [SafeRAG](https://github.com/IAAR-Shanghai/SafeRAG)
+- [Ragas context precision](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_precision/)
+- [DeepEval faithfulness](https://deepeval.com/docs/metrics-faithfulness)
+- [Promptfoo RAG evaluation](https://www.promptfoo.dev/docs/guides/evaluate-rag/)
+- [RAGChecker](https://github.com/amazon-science/RAGChecker)
 - [NIH ODS Iron](https://ods.od.nih.gov/factsheets/Iron-HealthProfessional/)
 - [NIH ODS Magnesium](https://ods.od.nih.gov/factsheets/Magnesium-HealthProfessional/)
 - [NHS Vitamin B12 diagnosis](https://www.nhs.uk/conditions/vitamin-b12-or-folate-deficiency-anaemia/diagnosis/)
@@ -276,4 +325,7 @@ Public references used for direction:
 ```bash
 uv run pytest
 uv run python -m compileall healf_max
+uv run healf-max kb validate --strict
+uv run healf-max kb ingest
+uv run healf-max evals safety --report-dir evals/safety
 ```

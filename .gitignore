@@ -9,6 +9,8 @@ __pycache__/
 .mypy_cache/
 .storage/*
 !.storage/.gitkeep
+evals/safety/report.json
+evals/safety/report.md
 dist/
 build/
 *.egg-info/

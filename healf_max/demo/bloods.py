@@ -90,6 +90,11 @@ def render_bloods_demo_debug(plan: dict[str, Any]) -> str:
     ]
     for index, item in enumerate(plan["priority_order"], start=1):
         lines.append(f"  {index}. {item}")
+    lines.append("Lane support:")
+    for lane in plan["recommendation_lanes"]:
+        support = ", ".join(lane["retrieved_support"]) if lane["retrieved_support"] else "no retrieved declared route"
+        status = "supported by" if lane["evidence_supported"] else "unsupported"
+        lines.append(f"  {lane['id']}: {status} {support}")
     lines.append("Retrieved KB records:")
     for path in plan["retrieved_record_paths"]:
         lines.append(f"  {path}")
@@ -169,8 +174,9 @@ def build_bloods_demo_prompt(plan: dict[str, Any]) -> str:
 
 
 def _retrieve_trace_records(query: str, *, settings: Settings) -> list[KBRecord]:
+    """Return search results plus a demo-curated trace superset for explainability."""
     searched = search_kb(query, kb_dir=settings.kb_dir, storage_dir=settings.storage_dir, limit=40)
-    by_id = {record.id: record for record in load_kb_records(settings.kb_dir)}
+    by_id = {record.id: record for record in _load_trace_catalog(settings)}
     output: list[KBRecord] = []
     seen: set[str] = set()
     for record in searched:
@@ -189,6 +195,15 @@ def _retrieve_trace_records(query: str, *, settings: Settings) -> list[KBRecord]
             ordered.append(record)
     ordered.extend(record for record in output if record.id not in {item.id for item in ordered})
     return ordered
+
+
+def _load_trace_catalog(settings: Settings) -> list[KBRecord]:
+    from healf_max.kb.index import load_index_records
+
+    indexed = load_index_records(settings.storage_dir)
+    if indexed:
+        return indexed
+    return load_kb_records(settings.kb_dir)
 
 
 __all__ = [

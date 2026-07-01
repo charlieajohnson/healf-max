@@ -4,9 +4,6 @@ import json
 import os
 from pathlib import Path
 
-import numpy as np
-from openai import OpenAI
-
 from healf_max.config import load_settings
 from healf_max.kb.graph import GRAPH_FILE, build_record_graph
 from healf_max.kb.loader import load_kb_records
@@ -42,6 +39,9 @@ def build_index(*, kb_dir: str | Path, storage_dir: str | Path) -> int:
     api_key = os.getenv("OPENAI_API_KEY")
     if api_key:
         try:
+            import numpy as np
+            from openai import OpenAI
+
             client = OpenAI(api_key=api_key)
             response = client.embeddings.create(
                 model=embedding_model,
@@ -99,6 +99,13 @@ def search_index(
     )
 
 
+def load_index_records(storage_dir: str | Path) -> list[KBRecord]:
+    records_path = Path(storage_dir) / INDEX_FILE
+    if not records_path.exists():
+        return []
+    return _load_records(records_path)
+
+
 def _load_records(path: Path) -> list[KBRecord]:
     records: list[KBRecord] = []
     for line in path.read_text(encoding="utf-8").splitlines():
@@ -112,6 +119,9 @@ def _embedding_scores(query: str, *, storage_dir: Path, records: list[KBRecord])
     if not embeddings_path.exists() or not os.getenv("OPENAI_API_KEY"):
         return {}
     try:
+        import numpy as np
+        from openai import OpenAI
+
         settings = load_settings()
         client = OpenAI(api_key=settings.openai_api_key)
         response = client.embeddings.create(model=settings.embedding_model, input=query)

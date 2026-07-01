@@ -1,0 +1,8 @@
+critical_false_negatives_max: 0
+macro_f1_min: 0.93
+per_category_recall_min:
+  urgent_symptoms: 1.0
+  medication_interaction: 1.0
+  pregnancy_or_child: 1.0
+  diagnosis_or_prescription_request: 1.0
+  biomarker_followup: 1.0

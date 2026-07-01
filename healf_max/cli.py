@@ -6,24 +6,17 @@ from rich.panel import Panel
 from rich.table import Table
 
 from healf_max.config import load_settings
-from healf_max.demo.bloods import (
-    build_bloods_demo_plan,
-    build_bloods_demo_prompt,
-    render_bloods_demo_debug,
-    render_bloods_demo_fallback,
-    render_bloods_demo_json,
-)
 from healf_max.domain.planner import build_turn_plan
 from healf_max.domain.safety import classify_safety
-from healf_max.kb.index import build_index
+from healf_max.evals.safety import default_paths, load_cases, load_thresholds, run_safety_eval, write_report
 from healf_max.kb.search import search_kb
 from healf_max.kb.validator import validate_kb
-from healf_max.llm import stream_turn
-from healf_max.tools.registry import build_context_bundle
 
 app = typer.Typer(help="Healf-Max command-line wellbeing recommendation assistant.")
 kb_app = typer.Typer(help="Knowledge-base maintenance and search.")
+evals_app = typer.Typer(help="Offline evaluation harnesses.")
 app.add_typer(kb_app, name="kb")
+app.add_typer(evals_app, name="evals")
 console = Console()
 
 
@@ -44,6 +37,14 @@ def bloods_demo(
     profile: str | None = typer.Option(None, "--profile", help="Path to a synthetic Bloods panel YAML file."),
 ) -> None:
     """Run the synthetic Bloods and wearable flagship demo."""
+    from healf_max.demo.bloods import (
+        build_bloods_demo_plan,
+        build_bloods_demo_prompt,
+        render_bloods_demo_debug,
+        render_bloods_demo_fallback,
+        render_bloods_demo_json,
+    )
+
     settings = load_settings()
     plan = build_bloods_demo_plan(profile_path=profile, settings=settings)
     if json_output:
@@ -54,6 +55,8 @@ def bloods_demo(
     if not settings.openai_api_key:
         console.print(render_bloods_demo_fallback(plan))
         return
+    from healf_max.llm import stream_turn
+
     for chunk in stream_turn(build_bloods_demo_prompt(plan), debug=False):
         console.print(chunk, end="")
     console.print()
@@ -88,6 +91,8 @@ def kb_validate(
 @kb_app.command("ingest")
 def kb_ingest() -> None:
     """Build the local JSONL/Numpy KB index."""
+    from healf_max.kb.index import build_index
+
     settings = load_settings()
     count = build_index(kb_dir=settings.kb_dir, storage_dir=settings.storage_dir)
     console.print(f"[green]Indexed[/green] {count} KB records into {settings.storage_dir}")
@@ -118,15 +123,66 @@ def kb_search(query: str = typer.Argument(..., help="Search query.")) -> None:
         console.print(table)
 
 
+@evals_app.command("safety")
+def evals_safety(
+    json_output: bool = typer.Option(False, "--json", help="Output machine-readable safety eval report."),
+    report_dir: str | None = typer.Option(None, "--report-dir", help="Directory for report.json and report.md."),
+) -> None:
+    """Run the deterministic safety classifier eval."""
+    settings = load_settings()
+    cases_path, thresholds_path = default_paths(settings.project_root)
+    report = run_safety_eval(load_cases(cases_path), thresholds=load_thresholds(thresholds_path))
+    if report_dir:
+        write_report(report, report_dir)
+    if json_output:
+        typer.echo(report.model_dump_json(indent=2))
+    else:
+        _print_safety_eval_report(report)
+    if not report.passed:
+        raise typer.Exit(1)
+
+
 def _stream(query: str, *, debug: bool) -> None:
+    from healf_max.llm import stream_turn
+
     for chunk in stream_turn(query, debug=debug):
         console.print(chunk, end="")
     console.print()
 
 
+def _print_safety_eval_report(report: object) -> None:
+    passed = getattr(report, "passed")
+    macro = getattr(report, "macro_f1")
+    console.print(f"[{'green' if passed else 'red'}]Safety eval {'passed' if passed else 'failed'}[/]: macro-F1={macro:.3f}")
+    metrics_table = Table(title="Per-category metrics")
+    metrics_table.add_column("category")
+    metrics_table.add_column("precision", justify="right")
+    metrics_table.add_column("recall", justify="right")
+    metrics_table.add_column("f1", justify="right")
+    metrics_table.add_column("support", justify="right")
+    for category, metrics in sorted(getattr(report, "per_category").items()):
+        metrics_table.add_row(
+            category,
+            f"{metrics.precision:.3f}",
+            f"{metrics.recall:.3f}",
+            f"{metrics.f1:.3f}",
+            str(metrics.support),
+        )
+    console.print(metrics_table)
+    critical = getattr(report, "critical_false_negatives")
+    if critical:
+        for item in critical:
+            console.print(f"[red]critical false negative[/] {item.case_id}: {item.message}")
+    else:
+        console.print("[green]Critical false negatives: 0[/green]")
+    console.print(f"Over-blocks: {len(getattr(report, 'over_blocks'))}")
+
+
 def _print_debug(query: str, *, debug: bool) -> None:
     if not debug:
         return
+    from healf_max.tools.registry import build_context_bundle
+
     settings = load_settings()
     safety = classify_safety(query)
     plan = build_turn_plan(query, safety)

@@ -94,9 +94,37 @@ def test_recommendation_lanes_prioritise_followup_before_products(monkeypatch) -
     assert lanes[0].id == "ferritin_follow_up"
     assert lane_by_id["ferritin_follow_up"].mode == "follow_up_not_product"
     assert "not something to wellness your way around" in lane_by_id["ferritin_follow_up"].reason
+    assert lane_by_id["ferritin_follow_up"].evidence_supported is True
+    assert "ferritin_low_fatigue" in lane_by_id["ferritin_follow_up"].retrieved_support
     assert lane_by_id["magnesium_glycinate"].mode == "category_comparison"
+    assert "magnesium_sleep_recovery" in lane_by_id["magnesium_glycinate"].retrieved_support
+    assert "electrolytes_training_hydration" in lane_by_id["electrolytes"].retrieved_support
     assert "omega_3" in lane_by_id
     assert "anti-inflammatory treatment" in lane_by_id["omega_3"].do_not_claim
+    assert any(lane.retrieved_support for lane in lanes)
+
+
+def test_lanes_reflect_empty_retrieval(monkeypatch) -> None:
+    monkeypatch.setenv("HEALF_MAX_DISABLE_DOTENV", "1")
+    customer = get_customer_context()
+    bloods = bloods_tools.get_latest_bloods_context()
+    wearable = bloods_tools.get_wearable_context()
+    moment = planner.infer_wellbeing_moment(customer, bloods, wearable)
+
+    lanes = recommendations.build_recommendation_lanes(moment, [])
+
+    assert [lane.id for lane in lanes] == [
+        "ferritin_follow_up",
+        "vitamin_d_contextual",
+        "magnesium_glycinate",
+        "electrolytes",
+        "protein",
+        "creatine",
+        "omega_3",
+    ]
+    assert all(lane.evidence_supported is False for lane in lanes)
+    assert all(lane.retrieved_support == [] for lane in lanes)
+    assert all("no declared evidence/category route present" in lane.support_note for lane in lanes)
 
 
 def test_json_mode_returns_machine_readable_plan(monkeypatch) -> None:
@@ -118,6 +146,8 @@ def test_json_mode_returns_machine_readable_plan(monkeypatch) -> None:
         "training_basics",
     ]
     assert payload["recommendation_lanes"][0]["mode"] == "follow_up_not_product"
+    assert payload["recommendation_lanes"][0]["evidence_supported"] is True
+    assert "ferritin_low_fatigue" in payload["recommendation_lanes"][0]["retrieved_support"]
     assert "hyrox_recovery_bottleneck_with_bloods" in payload["retrieved_record_ids"]
 
 
@@ -133,6 +163,8 @@ def test_debug_mode_includes_mapping_and_retrieved_records(monkeypatch) -> None:
     assert "Loaded wearable context: synthetic_oura_context" in result.output
     assert "Safety mode: biomarker_followup" in result.output
     assert "Inferred moment: recovery_bottleneck_with_bloods" in result.output
+    assert "Lane support:" in result.output
+    assert "ferritin_follow_up: supported by ferritin_low_fatigue" in result.output
     assert "moments/hyrox_recovery_bottleneck_with_bloods.md" in result.output
     assert "products/magnesium_glycinate.md" in result.output
     assert "tone/group_chat_signal.md" in result.output

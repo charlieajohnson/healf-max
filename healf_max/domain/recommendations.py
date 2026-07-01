@@ -33,12 +33,26 @@ def default_recommendation_lanes() -> list[RecommendationLane]:
     return list(DEFAULT_LANES)
 
 
-def build_recommendation_lanes(moment: WellbeingMoment, retrieved_records: list[Any]) -> list[RecommendationLane]:
+def build_recommendation_lanes(
+    moment: WellbeingMoment,
+    retrieved_records: list[Any],
+    *,
+    drop_unsupported: bool = False,
+) -> list[RecommendationLane]:
     if moment.id != "recovery_bottleneck_with_bloods":
-        return default_recommendation_lanes()
+        base = default_recommendation_lanes()
+    else:
+        base = _flagship_lanes()
 
     retrieved_ids = {getattr(record, "id", "") for record in retrieved_records}
-    lanes = [
+    annotated = [_annotate_lane(lane, retrieved_ids) for lane in base]
+    if drop_unsupported:
+        annotated = [lane for lane in annotated if lane.evidence_supported or lane.priority <= 2]
+    return annotated
+
+
+def _flagship_lanes() -> list[RecommendationLane]:
+    return [
         RecommendationLane(
             id="ferritin_follow_up",
             title="Ferritin first",
@@ -126,6 +140,21 @@ def build_recommendation_lanes(moment: WellbeingMoment, retrieved_records: list[
             do_not_claim=["anti-inflammatory treatment", "treats inflammation"],
         ),
     ]
-    if not retrieved_ids:
-        return lanes
-    return lanes
+
+
+def _annotate_lane(lane: RecommendationLane, retrieved_ids: set[str]) -> RecommendationLane:
+    declared = set(lane.evidence_routes) | set(lane.product_categories)
+    support = sorted(declared.intersection(retrieved_ids))
+    supported = bool(support)
+    note = (
+        f"retrieved support: {', '.join(support)}"
+        if supported
+        else "no declared evidence/category route present in retrieval; treat as authored default"
+    )
+    return lane.model_copy(
+        update={
+            "evidence_supported": supported,
+            "retrieved_support": support,
+            "support_note": note,
+        }
+    )

@@ -4,8 +4,6 @@ from collections.abc import Iterator
 import json
 from typing import Any
 
-from openai import OpenAI
-
 from healf_max.config import Settings, load_settings
 from healf_max.domain.planner import build_turn_plan
 from healf_max.domain.safety import SafetyCheck, classify_safety
@@ -22,6 +20,8 @@ def complete_turn(user_message: str, *, debug: bool = False) -> str:
     if not settings.openai_api_key:
         context = build_context_bundle(user_message, safety=safety, plan=plan, settings=settings, debug=debug)
         return offline_turn(user_message, safety=safety, context=context, debug=debug)
+
+    from openai import OpenAI
 
     client = OpenAI(api_key=settings.openai_api_key)
     response = _complete_with_tools(
@@ -43,6 +43,8 @@ def stream_turn(user_message: str, *, debug: bool = False) -> Iterator[str]:
 
     safety = classify_safety(user_message)
     plan = build_turn_plan(user_message, safety)
+    from openai import OpenAI
+
     client = OpenAI(api_key=settings.openai_api_key)
 
     try:
