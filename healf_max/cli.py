@@ -6,6 +6,13 @@ from rich.panel import Panel
 from rich.table import Table
 
 from healf_max.config import load_settings
+from healf_max.demo.bloods import (
+    build_bloods_demo_plan,
+    build_bloods_demo_prompt,
+    render_bloods_demo_debug,
+    render_bloods_demo_fallback,
+    render_bloods_demo_json,
+)
 from healf_max.domain.planner import build_turn_plan
 from healf_max.domain.safety import classify_safety
 from healf_max.kb.index import build_index
@@ -33,14 +40,23 @@ def ask(
 @app.command("bloods-demo")
 def bloods_demo(
     debug: bool = typer.Option(False, "--debug", help="Show visible safety, plan and retrieval trace."),
+    json_output: bool = typer.Option(False, "--json", help="Output the machine-readable Bloods plan."),
+    profile: str | None = typer.Option(None, "--profile", help="Path to a synthetic Bloods panel YAML file."),
 ) -> None:
-    """Run the synthetic bloods and wearable demo."""
-    query = (
-        "I am training for Hyrox in 12 weeks. My deep sleep is low, HRV is below baseline, "
-        "I am tired, and my latest bloods show low ferritin and borderline B12. What should I look at?"
-    )
-    _print_debug(query, debug=debug)
-    _stream(query, debug=debug)
+    """Run the synthetic Bloods and wearable flagship demo."""
+    settings = load_settings()
+    plan = build_bloods_demo_plan(profile_path=profile, settings=settings)
+    if json_output:
+        typer.echo(render_bloods_demo_json(plan))
+        return
+    if debug:
+        console.print(Panel(render_bloods_demo_debug(plan), title="Bloods flagship trace", border_style="cyan"))
+    if not settings.openai_api_key:
+        console.print(render_bloods_demo_fallback(plan))
+        return
+    for chunk in stream_turn(build_bloods_demo_prompt(plan), debug=False):
+        console.print(chunk, end="")
+    console.print()
 
 
 @kb_app.command("validate")

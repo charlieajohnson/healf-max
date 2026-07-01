@@ -9,5 +9,15 @@ goals:
 constraints:
   - caffeine_sensitive
   - wants_low_chaos_stack
+  - busy_work_schedule
 supplement_appetite: moderate
 optimisation_style: balanced
+customer_posture:
+  archetype: intentional_non_expert
+  tone_preference: warm_direct_social_native
+  confidence_need: next_best_step
+  shopping_preference: curated_shortlist
+  dislikes:
+    - giant_stacks
+    - sanctimonious_wellness
+    - vague_advice

@@ -1,24 +1,110 @@
-profile_id: demo_customer_hyrox_29f
+panel_id: healf_bloods_demo_001
+customer_id: demo_customer_hyrox_29f
 collected_at: "2026-06-24"
-summary: Synthetic bloods panel for demo use only.
+reported_at: "2026-06-27"
+source: synthetic_healf_bloods_upload
+summary:
+  plain_language: "Several markers suggest recovery load, nutrient status and energy support are worth looking at together rather than separately."
+  result_mode: proactive_check_in
 markers:
   - marker: ferritin
+    display_name: Ferritin
     value: 18
-    unit: ug/L
+    unit: ng/mL
     status: low
-    plain_language: Iron stores look low for someone training hard.
-  - marker: vitamin_b12
-    value: 312
-    unit: ng/L
-    status: suboptimal
-    plain_language: Borderline for a mostly plant-based diet.
+    reference_band:
+      low_below: 30
+      optimal_min: 50
+      optimal_max: 150
+    plain_language: "Ferritin reflects iron stores. Low ferritin can be relevant to tiredness and training tolerance, but it should be followed up properly rather than treated as a simple product question."
+    pillar: [eat, move]
+    action_mode: clinician_follow_up
+    evidence_routes: [ferritin_low_fatigue]
+    product_lanes: [iron_support]
+    safety_boundary:
+      - abnormal_bloods_need_follow_up
+      - no_diagnosis
+      - no_dosing
+
   - marker: vitamin_d
-    value: 71
+    display_name: Vitamin D
+    value: 28
     unit: nmol/L
-    status: optimal
-    plain_language: Looks broadly adequate.
-  - marker: tsh
-    value: 2.1
-    unit: mIU/L
-    status: optimal
-    plain_language: No synthetic flag in this demo panel.
+    status: low
+    reference_band:
+      low_below: 50
+      optimal_min: 75
+      optimal_max: 125
+    plain_language: "Vitamin D is low. This can be relevant to general wellbeing and musculoskeletal support, but should be addressed through practitioner-guided Bloods follow-up rather than guessed dosing."
+    pillar: [eat, move]
+    action_mode: practitioner_review
+    evidence_routes: [vitamin_d_low_status]
+    product_lanes: [vitamin_d_contextual]
+    safety_boundary:
+      - abnormal_bloods_need_follow_up
+      - no_prescriptive_dosing
+
+  - marker: magnesium_status
+    display_name: Magnesium status
+    value: suboptimal
+    unit: qualitative
+    status: suboptimal
+    plain_language: "Magnesium status is below the target range in this synthetic panel. In this context, it is relevant because sleep quality and recovery are also under pressure."
+    pillar: [sleep, move, mind]
+    action_mode: wellness_support_ok
+    evidence_routes: [magnesium_sleep_recovery]
+    product_lanes: [magnesium_glycinate]
+    safety_boundary:
+      - wellness_support_only
+      - check_medications_if_relevant
+
+  - marker: b12
+    display_name: Vitamin B12
+    value: 310
+    unit: pg/mL
+    status: suboptimal
+    reference_band:
+      low_below: 200
+      optimal_min: 400
+      optimal_max: 900
+    plain_language: "B12 is not flagged as severely low in this synthetic panel, but is worth watching in a mostly plant-based customer with fatigue."
+    pillar: [eat, mind]
+    action_mode: practitioner_review_if_symptomatic
+    evidence_routes: [b12_energy_metabolism]
+    product_lanes: [b12_contextual]
+    safety_boundary:
+      - no_diagnosis
+      - no_dosing
+
+  - marker: hs_crp
+    display_name: hs-CRP
+    value: 2.8
+    unit: mg/L
+    status: high
+    reference_band:
+      optimal_max: 1.0
+      high_above: 3.0
+    plain_language: "hs-CRP is an inflammation marker. A single result can move for many reasons, including training load or recent illness. It should not be over-interpreted in isolation."
+    pillar: [move, eat]
+    action_mode: contextual_follow_up
+    evidence_routes: [recovery_basics]
+    product_lanes: [omega_3]
+    safety_boundary:
+      - no_diagnosis
+      - avoid_overinterpretation
+
+  - marker: omega_3_index
+    display_name: Omega-3 index
+    value: 4.1
+    unit: "%"
+    status: suboptimal
+    reference_band:
+      optimal_min: 8.0
+    plain_language: "Omega-3 status is below the target range in this synthetic panel. It may be relevant to general health and recovery context, but should not be framed as treating inflammation."
+    pillar: [eat, move]
+    action_mode: wellness_support_ok
+    evidence_routes: [omega_3_general_health]
+    product_lanes: [omega_3]
+    safety_boundary:
+      - wellness_support_only
+      - no_disease_treatment_claims

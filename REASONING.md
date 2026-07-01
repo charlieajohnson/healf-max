@@ -18,6 +18,12 @@ Evidence constrains claims. Biomarkers constrain routing. Product records explai
 
 Abnormal biomarkers should not trigger product recommendations. Low ferritin, high HbA1c, thyroid flags or medication context need careful follow-up language before commercial suggestions. In this build, the deterministic safety classifier catches those boundaries before the model speaks.
 
+## Bloods As Context, Not A Shopping Trigger
+
+Healf-Max treats Bloods results as high-signal context for prioritisation and safety routing. A low marker changes the order of operations, but it does not automatically create a product recommendation. For example, low ferritin is routed to follow-up language before any product discussion. This prevents the assistant from turning abnormal biomarkers into a shopping list while still making the result useful to the customer.
+
+The Bloods flagship mode combines synthetic blood markers, wearable trends and a stated Hyrox goal to infer a recovery bottleneck. The result is a proactive check-in that explains what the data may mean, what to prioritise, which product categories are worth comparing, and what not to overdo.
+
 ## 4. Category-First Product Fit
 
 The assistant defaults to categories because product-level confidence is easy to overstate. Electrolytes, protein and magnesium can be useful lanes for a training and recovery moment, but the assistant should not pretend that a product treats fatigue, insomnia, anaemia or deficiency.

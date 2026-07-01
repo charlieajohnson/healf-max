@@ -1,0 +1,47 @@
+wellbeing_moment:
+  id: recovery_bottleneck_with_bloods
+  title: Recovery bottleneck with Bloods
+  primary_interpretation: recovery_bottleneck
+  signals:
+    - hyrox_training_block
+    - low_deep_sleep
+    - hrv_below_baseline
+    - resting_hr_slightly_elevated
+    - fatigue
+    - low_ferritin
+    - low_vitamin_d
+    - suboptimal_magnesium
+    - suboptimal_b12
+  pillars: [eat, move, sleep]
+  customer_confidence_goal: next_best_step
+  commercial_mode: category_first
+  safety_boundaries:
+    - biomarker_followup
+    - no_diagnosis
+    - abnormal_bloods_need_follow_up
+    - no_prescriptive_dosing
+  priority_order:
+    - ferritin_follow_up
+    - vitamin_d_practitioner_guided
+    - sleep_support
+    - training_basics
+    - omega_3_contextual
+  recommendation_lanes:
+    - id: ferritin_follow_up
+      title: Ferritin first
+      mode: follow_up_not_product
+    - id: magnesium_glycinate
+      title: Magnesium glycinate
+      mode: category_comparison
+    - id: electrolytes
+      title: Electrolytes
+      mode: training_basic
+    - id: creatine
+      title: Creatine
+      mode: training_basic
+    - id: protein
+      title: Protein
+      mode: intake_check_first
+    - id: vitamin_d_contextual
+      title: Vitamin D
+      mode: practitioner_guided

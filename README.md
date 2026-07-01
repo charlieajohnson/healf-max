@@ -28,13 +28,26 @@ HEALF_MAX_STREAM=true
 
 If `OPENAI_API_KEY` is missing, LLM-backed commands degrade with a clear local response rather than crashing.
 
+## Try This First
+
+The flagship demo is the quickest way to see the intended behaviour:
+
+```bash
+uv run healf-max bloods-demo
+```
+
+It works without an API key by using deterministic synthetic Bloods, wearable and goal context.
+
 ## Commands
 
 ```bash
-uv run healf-max ask "I need more energy"
-uv run healf-max ask --debug "I'm training for Hyrox in 12 weeks..."
 uv run healf-max bloods-demo
 uv run healf-max bloods-demo --debug
+uv run healf-max bloods-demo --json
+uv run healf-max bloods-demo --profile data/synthetic_bloods_results.yaml
+
+uv run healf-max ask "I need more energy"
+uv run healf-max ask --debug "I'm training for Hyrox in 12 weeks..."
 
 uv run healf-max kb validate
 uv run healf-max kb validate --strict
@@ -143,6 +156,22 @@ The `kb/products/` layer now has two levels:
 - `product` records under `kb/products/catalogue/` are dated Healf Best Sellers snapshots pulled from the supplied 2026-06-30 source files.
 
 Product records link back to category records through `category_routes`; categories link forward through `catalogue_products`. This keeps concrete product retrieval useful without letting price, stock, review count or delivery metadata become live truth.
+
+## Bloods Flagship Demo
+
+Run:
+
+```bash
+uv run healf-max bloods-demo
+uv run healf-max bloods-demo --debug
+uv run healf-max bloods-demo --json
+```
+
+This demo uses synthetic Bloods and wearable data to show how Healf-Max can produce a proactive wellbeing check-in.
+
+The synthetic customer is training for Hyrox in 12 weeks and has low ferritin, low vitamin D, suboptimal magnesium, low deep sleep and HRV below baseline.
+
+The assistant prioritises follow-up and category-level support. It does not diagnose, prescribe, or turn abnormal blood results into a shopping list.
 
 ## Retrieval
 

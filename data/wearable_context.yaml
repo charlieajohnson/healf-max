@@ -1,23 +1,35 @@
-profile_id: demo_customer_hyrox_29f
-source: synthetic_oura_like
-window: trailing_14_days
+customer_id: demo_customer_hyrox_29f
+source: synthetic_oura_context
+window: last_14_days
 signals:
-  - signal: deep_sleep
-    value: 48
+  - signal: deep_sleep_avg
+    display_name: Deep sleep average
+    value: 43
     unit: minutes
     status: low
-    window: trailing_14_days
-  - signal: resting_heart_rate
-    value: 61
-    unit: bpm
-    status: normal
-    window: trailing_14_days
-  - signal: hrv
-    value: 41
-    unit: ms
+    plain_language: "Deep sleep has been consistently low over the last 14 days."
+    related_goals: [recovery, sleep_quality, hyrox_training]
+
+  - signal: hrv_trend
+    display_name: HRV trend
+    value: below_baseline
+    unit: qualitative
     status: below_baseline
-    window: trailing_14_days
-  - signal: training_load
-    value: high
+    plain_language: "HRV is below this customer's usual baseline, which can be consistent with recovery pressure."
+    related_goals: [recovery, training_load]
+
+  - signal: resting_hr_trend
+    display_name: Resting heart rate trend
+    value: slightly_elevated
+    unit: qualitative
     status: high
-    window: trailing_7_days
+    plain_language: "Resting heart rate is slightly elevated versus the customer's baseline."
+    related_goals: [recovery, training_load]
+
+  - signal: training_load
+    display_name: Training load
+    value: hyrox_block_week_1
+    unit: qualitative
+    status: high
+    plain_language: "Customer is starting a 12-week Hyrox training block."
+    related_goals: [hyrox, performance, recovery]

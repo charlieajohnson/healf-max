@@ -40,13 +40,17 @@ class WellbeingMoment(BaseModel):
     commercial_mode: str
     safety_boundaries: list[str] = Field(default_factory=list)
     product_lanes: list[str] = Field(default_factory=list)
+    priority_order: list[str] = Field(default_factory=list)
+    retrieval_query: str = ""
 
 
 class RecommendationLane(BaseModel):
     id: str
     title: str
-    role: str
-    priority: int
+    role: str = ""
+    priority: int = 0
+    mode: str = ""
+    reason: str = ""
     evidence_routes: list[str] = Field(default_factory=list)
     product_categories: list[str] = Field(default_factory=list)
     safety_notes: list[str] = Field(default_factory=list)
